@@ -1,0 +1,2 @@
+opencv-python
+google-cloud-pubsub==2.3.0
