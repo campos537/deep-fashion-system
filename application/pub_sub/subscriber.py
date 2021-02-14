@@ -2,6 +2,7 @@ import time
 import uuid
 from google.cloud import pubsub_v1
 import numpy as np
+import json
 import base64
 import cv2
 import os 
@@ -14,8 +15,9 @@ class Subscriber:
         
     def callback(self, message):
         if message is not None:
-            class_ = message.data.decode('utf-8')
-            print(class_)
+            stream = base64.decodebytes(message.data)
+            stream_decoded = json.loads(stream.decode())
+            print("Image name: ", stream_decoded.get("image_name"), " Class Predicted: ", stream_decoded.get("class"))
         message.ack()
 
     def listen(self):

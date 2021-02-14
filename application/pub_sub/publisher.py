@@ -1,9 +1,6 @@
 import time
-import uuid
 from google.cloud import pubsub_v1
-import numpy as np
-import base64
-import cv2
+from utils.stream_object import StreamObject
 import os 
 
 class Publisher:
@@ -19,14 +16,9 @@ class Publisher:
             except:
                 print("Please handle {}.".format(f.exception()))
         return callback
-
-    def process_image(self, img_path):
-        img = cv2.imread(img_path)
-        final = base64.b64encode(img)
-        return final
     
     def publish(self, img_path):
-        data = self.process_image(img_path)
+        data = StreamObject(img_path).get_object()
         self.futures.update({data: None})
         future = self.publisher.publish(self.topic_path, data)
         self.futures[data] = future
