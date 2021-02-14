@@ -1,2 +1,3 @@
-opencv-python
+opencv-python-inference-engine
 google-cloud-pubsub==2.3.0
+asyncio

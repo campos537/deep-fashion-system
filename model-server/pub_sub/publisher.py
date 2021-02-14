@@ -19,18 +19,14 @@ class Publisher:
             except:
                 print("Please handle {}.".format(f.exception()))
         return callback
-
-    def process_image(self, img_path):
-        img = cv2.imread(img_path)
-        final = base64.b64encode(img)
-        return final
     
-    def publish(self, img_path):
-        data = self.process_image(img_path)
+    def publish(self, result):
+        data = result
         self.futures.update({data: None})
-        future = self.publisher.publish(self.topic_path, data)
+        if data is not None:
+            future = self.publisher.publish(self.topic_path, data.encode('utf-8'))
         self.futures[data] = future
         future.add_done_callback(self.get_callback(future, data))
         while self.futures:
-            time.sleep(0.001)
+            time.sleep(1)
     
