@@ -13,7 +13,9 @@ class Subscriber:
         self.futures = dict()
         
     def callback(self, message):
-        print(print(message.data))
+        if message is not None:
+            class_ = message.data.decode('utf-8')
+            print(class_)
         message.ack()
 
     def listen(self):
