@@ -8,7 +8,7 @@ To use this repository please follow the steps below:
 
 ```
 cd deep-fashion-system/application
-python3.7 -m pip install -r requirements
+# export the Gcloud credentials of your project
 export GOOGLE_APPLICATION_CREDENTIALS=credentials.json 
-python3.7 main.py path/to/image_folder
+python3.7 client_app.py path/to/image_folder
 ```

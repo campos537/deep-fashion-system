@@ -9,12 +9,13 @@ import os
 def start_listening(sub):
     sub.listen()
 
-sub = Subscriber('deep-fashion-production', 'client_response-sub')
-thread = Thread(target=start_listening, kwargs={"sub": sub})
-thread.start()
-time.sleep(0.2)
 
 def main(image_folder):
+    sub = Subscriber('deep-fashion-production', 'client_response-sub')
+    thread = Thread(target=start_listening, kwargs={"sub": sub})
+    thread.start()
+    time.sleep(0.2)
+    
     pub = Publisher('deep-fashion-production', 'client_request')
     
     for image in os.listdir(image_folder):
