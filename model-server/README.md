@@ -4,7 +4,7 @@ this folder contains a simple but robust model server application that uses Goog
 
 ## Usage
 
-To use this repository you will first need to have an json file with the model configuration and a (model)[https://github.com/campos537/simple-fashion-classifier] trained for that
+To use this repository you will first need to have an json file with the model configuration and a [model](https://github.com/campos537/simple-fashion-classifier) trained for that
 
 Create the json file following the example below:
 
