@@ -4,7 +4,8 @@ from google.cloud import pubsub_v1
 import numpy as np
 import base64
 import cv2
-import os 
+import os
+from utils.response_object import ResponseObject
 
 class Publisher:
     def __init__(self, project_id, topic_id):
@@ -20,11 +21,11 @@ class Publisher:
                 print("Please handle {}.".format(f.exception()))
         return callback
     
-    def publish(self, result):
-        data = result
+    def publish(self, result, img_name):
+        data = ResponseObject(result, img_name).get_object()
         self.futures.update({data: None})
         if data is not None:
-            future = self.publisher.publish(self.topic_path, data.encode('utf-8'))
+            future = self.publisher.publish(self.topic_path, data)
         self.futures[data] = future
         future.add_done_callback(self.get_callback(future, data))
         while self.futures:

@@ -2,6 +2,7 @@ import time
 import uuid
 from google.cloud import pubsub_v1
 import numpy as np
+import json
 import base64
 import asyncio
 from classifier.classifier import Classifier
@@ -20,9 +21,13 @@ class Subscriber:
         self.futures = dict()
         
     def callback(self, message):
-        img = base64.decodebytes(message.data)
-        fimg = np.frombuffer(img, dtype=np.uint8).reshape(28,28,3)
-        self.pub.publish(self.classifier.predict(fimg))
+        stream = base64.decodebytes(message.data)
+        stream_decoded = json.loads(stream.decode())
+        
+        img = np.array(stream_decoded.get("img"), dtype=np.uint8)
+        img_name = stream_decoded.get("image_name")
+        
+        self.pub.publish(self.classifier.predict(img),img_name)
         message.ack()
 
     def listen(self):
