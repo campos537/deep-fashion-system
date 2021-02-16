@@ -5,4 +5,6 @@ def valid_pubsub(config):
     return False
 
 def valid_kafka(config):
-    pass
+    if config.get("bootstrap_server") is not None and config.get("port") is not None:
+        return True
+    return False
