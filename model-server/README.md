@@ -25,6 +25,18 @@ Create the json file following the example below:
 }
 ```
 
+In order to use Kafka change the config file to this standard:
+
+```
+{
+    "bootstrap_server": "localhost", 
+    "port": "9092",
+    "topic_id": "client_response",
+    "subscription_id": "client_request",
+    ...
+}
+```
+
 Then pass the configuration json as an argument:
 
 ```
