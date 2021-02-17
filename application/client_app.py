@@ -1,29 +1,39 @@
-from pub_sub.publisher import Publisher
 from threading import Thread
+from config import Config
+from utils.stream_object import StreamObject
 import threading
-from pub_sub.subscriber import Subscriber
 import time
 import sys
 import os
+import base64
+sys.path.append(os.path.abspath('../'))
+from unified_api.broker import Broker
+from utils.utils import get_result
 
-def start_listening(sub):
-    sub.listen()
 
+def start_listening(broker):
+    broker.listen()
 
-def main(image_folder):
-    sub = Subscriber('deep-fashion-production', 'client_response-sub')
-    thread = Thread(target=start_listening, kwargs={"sub": sub})
+def process_request(broker):
+    while(True):
+        msg = broker.get_message()
+        if msg is not None:
+            print(get_result(msg))
+            
+def main(image_folder, config):
+    broker = Broker(Config(config))
+    thread = threading.Thread(target=start_listening, kwargs={"broker": broker})
     thread.start()
-    time.sleep(0.2)
-    
-    pub = Publisher('deep-fashion-production', 'client_request')
-    
+    thread2 = threading.Thread(target=process_request, kwargs={"broker": broker})
+    thread2.start()
+
     for image in os.listdir(image_folder):
         img_path = image_folder + "/" + image
-        pub.publish(img_path)
-        
+        broker.publish(StreamObject(img_path).get_object())
+
+
 if __name__ == '__main__':
-    if not len(sys.argv) == 2:
-        print('usage: python app.py path/to/image/folder')
-        exit(0) 
-    main(sys.argv[1])
+    if not len(sys.argv) == 3:
+        print('usage: python app.py path/to/image/folder path/to/config/file')
+        exit(0)
+    main(sys.argv[1], sys.argv[2])

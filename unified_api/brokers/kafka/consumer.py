@@ -5,7 +5,7 @@ class Consumer:
         bootstrap_server = config.get(
             "bootstrap_server") + ":" + config.get("port")
         self.consumer = KafkaConsumer(config.get(
-            "subscription_id"), bootstrap_servers=bootstrap_server, api_version=(0, 10), 
+            "kafka_subscription_id"), bootstrap_servers=bootstrap_server, api_version=(0, 10), 
                                       auto_offset_reset='earliest', enable_auto_commit=True, group_id="test")
         self.messages = []
 

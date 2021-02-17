@@ -6,27 +6,35 @@ from unified_api.brokers.kafka.producer import Producer
 
 #from brokers.kafka import Kafka
 from unified_api.utils.utils import valid_pubsub, valid_kafka
-
+import threading
+import base64
+import time
+import gc
 
 class Broker:
     def __init__(self, config):
-        self.giver = None
-        self.receiver = None
+        self.givers = []
+        self.receivers = []
+        self.config = config
+    
         if valid_pubsub(config):
-            self.giver = Publisher(config)
-            self.receiver = Subscriber(config)
-            self.broker_type = "pubsub"
-
-        elif valid_kafka(config):
-            self.giver = Producer(config)
-            self.receiver = Consumer(config)
-            self.broker_type = "kafka"
+            self.givers.append(Publisher(config))
+            self.receivers.append(Subscriber(config))
+        if valid_kafka(config):
+            self.givers.append(Producer(config))
+            self.receivers.append(Consumer(config))
 
     def publish(self, message):
-        self.giver.publish(message)
+        for giver in self.givers:
+            giver.publish(message)
 
     def listen(self):
-        self.receiver.listen()
-
+        for receiver in self.receivers:
+            t1 = threading.Thread(target=receiver.listen)
+            t1.start()
+        
     def get_message(self):
-        return self.receiver.get_message()
+        for receiver in self.receivers:
+            message = receiver.get_message()
+            if (message is not None):
+                return message

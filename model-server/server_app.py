@@ -1,5 +1,5 @@
 from classifier.classifier import Classifier
-from utils.utils import msg2img, result2msg
+from utils.utils import msg2img, result2msg, check_msg
 import threading
 from config import Config
 import sys, os
@@ -14,8 +14,12 @@ def process_request(broker, classifier):
     while(True):
         msg = broker.get_message()
         if msg is not None:
-            img, name = msg2img(msg)
-            broker.publish(result2msg(classifier.predict(img), name))
+            decoded, type_ = check_msg(msg)
+            if type_ == "img":
+                img, name = msg2img(decoded)
+                broker.publish(result2msg(classifier.predict(img), name))
+            else:
+                broker.publish(decoded)
 
 def main(model_path):
     config = Config(model_path)
