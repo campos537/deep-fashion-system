@@ -21,8 +21,8 @@ def process_request(broker, classifier):
             else:
                 broker.publish(decoded)
 
-def main(model_path):
-    config = Config(model_path)
+def main(config_):
+    config = Config(config_)
     print("Model Framework: ", config.get("framework"), " Model Labels: ", config.get("labels"))
     
     broker = Broker(config)
