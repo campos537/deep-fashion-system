@@ -15,8 +15,7 @@ class Subscriber:
     
     def get_message(self):
         if len(self.messages) > 0:
-            mes = self.messages.pop(0)
-            return mes
+            return self.messages.pop(0)
     
     def callback(self, message):
         self.messages.append(message.data)

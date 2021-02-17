@@ -46,9 +46,3 @@ class Classifier:
         self.net.setInput(blob)
         out = self.net.forward()
         return self.process_output(out)
-
-    async def read():
-        pass
-
-    async def enqueue():
-        pass
