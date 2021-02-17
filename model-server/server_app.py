@@ -7,8 +7,6 @@ sys.path.append(os.path.abspath('../'))
 
 from  unified_api.broker import Broker
 
-def start_listening(broker):
-    broker.listen()
     
 def process_request(broker, classifier):
     while(True):
@@ -24,12 +22,9 @@ def process_request(broker, classifier):
 def main(config_):
     config = Config(config_)
     print("Model Framework: ", config.get("framework"), " Model Labels: ", config.get("labels"))
-    
     broker = Broker(config)
+    broker.listen()
     classifier = Classifier(config)
-    
-    thread = threading.Thread(target=start_listening, kwargs={"broker": broker})
-    thread.start()
     thread = threading.Thread(target=process_request, kwargs={"broker": broker, "classifier": classifier})
     thread.start()
 

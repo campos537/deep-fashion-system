@@ -11,9 +11,6 @@ from unified_api.broker import Broker
 from utils.utils import get_result
 
 
-def start_listening(broker):
-    broker.listen()
-
 def process_request(broker):
     while(True):
         msg = broker.get_message()
@@ -22,11 +19,9 @@ def process_request(broker):
             
 def main(image_folder, config):
     broker = Broker(Config(config))
-    thread = threading.Thread(target=start_listening, kwargs={"broker": broker})
-    thread.start()
+    broker.listen()
     thread2 = threading.Thread(target=process_request, kwargs={"broker": broker})
     thread2.start()
-
     for image in os.listdir(image_folder):
         img_path = image_folder + "/" + image
         broker.publish(StreamObject(img_path).get_object())
