@@ -68,4 +68,5 @@ class Broker:
                     break
                 if(time.time() > timeout):
                     timeout = 0
+                    giver.valid = False
                     break
